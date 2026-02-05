@@ -10,7 +10,8 @@
     <ItemGroup>
         <PackageReference Include="StateleSSE.AspNetCore" Version="3.1.0" />
         <PackageReference Include="NSwag.AspNetCore" Version="14.6.3" />
-        <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="14.5.0"/>
+        <PackageReference Include="NSwag.CodeGeneration.TypeScript" Version="14.6.3"/>
+        <PackageReference Include="NSwag.Generation" Version="14.6.3" />
         <PackageReference Include="NSec.Cryptography" Version="25.4.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.9" />
     </ItemGroup>
