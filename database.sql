@@ -22,5 +22,6 @@ CREATE TABLE chat.messages(
 
 CREATE TABLE chat.userRooms(
     userId TEXT REFERENCES chat.user(id) ON DELETE CASCADE,
-    roomId TEXT REFERENCES chat.rooms(id) ON DELETE CASCADE
+    roomId TEXT REFERENCES chat.rooms(id) ON DELETE CASCADE,
+    PRIMARY KEY (userId, roomId)
 );
