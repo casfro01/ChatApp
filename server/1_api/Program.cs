@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using _1_api;
+using _2_service;
 using _2_service.Security;
 using _3_dataaccess;
 using DefaultNamespace;
@@ -41,7 +42,8 @@ public class Program
         // repos
         
         // services
-        //services.AddScoped<>();
+        services.AddScoped<ITokenService, JwtService>();
+        services.AddScoped<IAuthService, AuthService>();
         
         services.AddDbContext<MyDbContext>((services, options) =>
         {
