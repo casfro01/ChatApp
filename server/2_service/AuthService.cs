@@ -2,14 +2,17 @@
 using _2_service.Models;
 using _3_dataaccess;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using LoginRequest = _2_service.Models.LoginRequest;
 
 namespace _2_service;
 
 public interface IAuthService
 {
     Task<AuthUserInfo> Login(LoginRequest request);
+    AuthUserInfo GetUser(string id);
 }
 
 
@@ -42,5 +45,11 @@ public class AuthService(MyDbContext ctx, IPasswordHasher<User> hasher) : IAuthS
     {
         return hasher.VerifyHashedPassword(foundUser, foundUser.Passwordhash, request.Password) !=
                PasswordVerificationResult.Success ? throw new ValidationException("Username or password is wrong you fucking idiot") : new AuthUserInfo(foundUser.Id, foundUser.Username, "User");
+    }
+    
+    public AuthUserInfo GetUser(string userId)
+    {
+        var user = ctx.Users.First(u => u.Id == userId);
+        return new AuthUserInfo(user.Id, user.Username, "User");
     }
 }

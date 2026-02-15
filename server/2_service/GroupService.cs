@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using _2_service.Models;
 using _3_dataaccess;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,7 @@ public interface IGroupService
 {
     List<RoomResponse> GetRooms();
     Task<RoomResponse> NewRoom(string newRoomName);
+    ExtendedRoomResponse GetRoom(string id);
 }
 
 public class GroupService(MyDbContext ctx) : IGroupService
@@ -30,5 +32,13 @@ public class GroupService(MyDbContext ctx) : IGroupService
         ctx.Rooms.Add(room);
         await ctx.SaveChangesAsync();
         return new RoomResponse(room.Id, room.Chatname);
+    }
+    
+    public ExtendedRoomResponse GetRoom(string id)
+    {
+        var room = ctx.Rooms.Include(r => r.Messages).First(r => r.Id == id);
+        List<MessageResponse> mes = new();
+        room.Messages.ToList().ForEach(m => mes.Add(new MessageResponse(m.Chatmessage, m.Userid)));
+        return new ExtendedRoomResponse(room.Id, room.Chatname, mes);
     }
 }
