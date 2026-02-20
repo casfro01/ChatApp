@@ -120,6 +120,43 @@
         ]
       }
     },
+    "/SendChatMessage": {
+      "post": {
+        "tags": [
+          "Chat"
+        ],
+        "operationId": "Chat_SendChatMessage",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendMessageRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
     "/Rooms": {
       "get": {
         "tags": [
@@ -343,6 +380,32 @@
           }
         }
       },
+      "ChatResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponseDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "SendMessageRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "groupId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
       "RoomResponse": {
         "type": "object",
         "additionalProperties": false,
@@ -359,6 +422,7 @@
         "type": "string",
         "enum": [
           "LoginResponseDto",
+          "ChatResponse",
           "UserLeftResponseDto",
           "JoinGroupResponse",
           "JoinGroupBroadcast",

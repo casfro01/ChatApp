@@ -10,6 +10,8 @@ public interface IGroupService
     List<RoomResponse> GetRooms();
     Task<RoomResponse> NewRoom(string newRoomName);
     ExtendedRoomResponse GetRoom(string id);
+
+    Task<MessageResponse> NewMessage(string userId, string groupId, string content);
 }
 
 public class GroupService(MyDbContext ctx) : IGroupService
@@ -40,5 +42,24 @@ public class GroupService(MyDbContext ctx) : IGroupService
         List<MessageResponse> mes = new();
         room.Messages.ToList().ForEach(m => mes.Add(new MessageResponse(m.Chatmessage, m.Userid)));
         return new ExtendedRoomResponse(room.Id, room.Chatname, mes);
+    }
+
+    public async Task<MessageResponse> NewMessage(string userId, string groupId, string content)
+    {
+        var user = ctx.Users.First(u => u.Id == userId);
+        var room = ctx.Rooms.First(g => g.Id == groupId);
+        var mes = new Message()
+        {
+            Chatmessage = content,
+            Room = room,
+            Roomid = room.Id,
+            User = user,
+            Userid = user.Id,
+            
+        };
+        
+        room.Messages.Add(mes);
+        await ctx.SaveChangesAsync();
+        return new MessageResponse(mes.Chatmessage, user.Username);
     }
 }

@@ -58,6 +58,22 @@ public class ChatController(ISseBackplane backplane, IAuthService userService, I
         
         return new JoinGroupResponse(room);
     }
+
+    [HttpPost(nameof(SendChatMessage))]
+    [Produces<MessageResponse>]
+    public async Task SendChatMessage([FromBody] SendMessageRequest request)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var message = await roomService.NewMessage(userId, request.GroupId, request.Message);
+        
+        await backplane.Clients.SendToGroupAsync(request.GroupId, message);
+    }
+}
+
+public record SendMessageRequest (string ConnectionId, string GroupId, string Message);
+
+public record ChatResponse : BaseResponseDto
+{
 }
 
 public record JoinGroupRequest(string ConnectionId, string Group);

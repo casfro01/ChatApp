@@ -46,6 +46,7 @@ public class Program
         services.AddScoped<ITokenService, JwtService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPasswordHasher<User>, NSecArgon2IdPasswordHasher>();
+        services.AddScoped<IGroupService, GroupService>();
         
         services.AddDbContext<MyDbContext>((services, options) =>
         {
