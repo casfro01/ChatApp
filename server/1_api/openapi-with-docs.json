@@ -1,0 +1,378 @@
+{
+  "x-generator": "NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "My Title",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_Login",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Connect": {
+      "get": {
+        "tags": [
+          "Chat"
+        ],
+        "operationId": "Chat_Connect",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/JoinGroup": {
+      "post": {
+        "tags": [
+          "Chat"
+        ],
+        "operationId": "Chat_JoinGroup",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JoinGroupRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "202": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JoinGroupBroadcast"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JoinGroupResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserLeftResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/Rooms": {
+      "get": {
+        "tags": [
+          "Group"
+        ],
+        "operationId": "Group_GetRooms",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoomResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/newRoom": {
+      "post": {
+        "tags": [
+          "Group"
+        ],
+        "operationId": "Group_NewRoom",
+        "requestBody": {
+          "x-name": "newRoomName",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LoginResponseDto": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponseDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "jwt": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "BaseResponseDto": {
+        "type": "object",
+        "description": "Models used for server sent events to clients should preferably use this model.\nIt automatically attaches \"EventType\" as a property with type name as value.",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "eventType": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "ConnectionResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponseDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "connectionId": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "JoinGroupBroadcast": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponseDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "connectedUsers": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ConnectionIdAndUserName"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ConnectionIdAndUserName": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "userName": {
+            "type": "string"
+          }
+        }
+      },
+      "JoinGroupResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponseDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "room": {
+                "$ref": "#/components/schemas/ExtendedRoomResponse"
+              }
+            }
+          }
+        ]
+      },
+      "ExtendedRoomResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "chatName": {
+            "type": "string"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessageResponse"
+            }
+          }
+        }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "sender": {
+            "type": "string"
+          }
+        }
+      },
+      "UserLeftResponseDto": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponseDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "JoinGroupRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "connectionId": {
+            "type": "string"
+          },
+          "group": {
+            "type": "string"
+          }
+        }
+      },
+      "RoomResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          }
+        }
+      },
+      "StringConstants": {
+        "type": "string",
+        "enum": [
+          "LoginResponseDto",
+          "UserLeftResponseDto",
+          "JoinGroupResponse",
+          "JoinGroupBroadcast",
+          "ConnectionResponse"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "Enter your JWT token",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

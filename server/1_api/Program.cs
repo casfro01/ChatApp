@@ -7,6 +7,7 @@ using _3_dataaccess;
 using DefaultNamespace;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NSwag;
 using NSwag.Generation.Processors.Security;
@@ -18,7 +19,7 @@ public class Program
 {
     public static void ConfigureServices(IServiceCollection services, WebApplicationBuilder builder)
     {
-        var redis = builder.Configuration.GetSection("Redis").Value;
+        //var redis = builder.Configuration.GetSection("Redis").Value;
         services.AddSingleton<AppOptions>(provider =>
         {
             var configuration = provider.GetRequiredService<IConfiguration>();
@@ -44,6 +45,7 @@ public class Program
         // services
         services.AddScoped<ITokenService, JwtService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IPasswordHasher<User>, NSecArgon2IdPasswordHasher>();
         
         services.AddDbContext<MyDbContext>((services, options) =>
         {
@@ -91,7 +93,7 @@ public class Program
         
         builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
         {
-            var config = ConfigurationOptions.Parse(redis);
+            var config = ConfigurationOptions.Parse(sp.GetRequiredService<AppOptions>().Redis);
             config.AbortOnConnectFail = false;
             return ConnectionMultiplexer.Connect(config);
         });

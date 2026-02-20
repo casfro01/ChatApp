@@ -22,9 +22,15 @@ public class AuthService(MyDbContext ctx, IPasswordHasher<User> hasher) : IAuthS
     {
         Validator.ValidateObject(request, new ValidationContext(request), true);
 
-        var dbUser = ctx.Users.FirstOrDefault(u => u.Username == request.Username, null);
-        if (dbUser == null) return await NewUser(request);
-        return AuthLogin(request, dbUser);
+        try
+        {
+            var dbUser = ctx.Users.First(u => u.Username == request.Username);
+            return AuthLogin(request, dbUser);
+        }
+        catch (InvalidOperationException _)
+        {
+            return await NewUser(request);
+        }
     }
 
     private async Task<AuthUserInfo> NewUser(LoginRequest request)
